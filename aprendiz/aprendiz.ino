@@ -59,21 +59,21 @@ void loop() {
       estimulo_ultrassom += 1;
     }
     if(LDR_top()<200){
-      estimulo_luz_alta += 1;
+      estimulo_luz_alta += 5;
     }
     if(LDR_top()>=900){
-      estimulo_luz_baixa += 1;
+      estimulo_luz_baixa += 5;
     }
+    
   } else {
+    servo_left_stop ();
+    servo_right_stop();
     if(sensor==ULTRASSOM || sensor==IR){
-      visao = ver_sensores();
-      moverse(visao);
+      mov_avanca();
     } else if (sensor==LUZ_BAIXA && LDR_top()>=900){
-      visao = ver_sensores();
-      moverse(visao);
+      mov_avanca();
     } else if (sensor==LUZ_ALTA && LDR_top()<200){
-      visao = ver_sensores();
-      moverse(visao);
+      mov_avanca();
     }
   }
   
@@ -85,7 +85,6 @@ void loop() {
 bool aprendendo(){
   if(tempo_aprendizagem>0){
     tempo_aprendizagem--;
-    Serial.println(tempo_aprendizagem);
     return true;
   }
   if(tempo_aprendizagem==0){
@@ -110,6 +109,16 @@ bool aprendendo(){
       LED_color(0,0,1);
     }
     tempo_aprendizagem--;
+    /*Serial.println("ir:"+estimulo_ir);
+    Serial.println(estimulo_ir);
+    Serial.println("som:");
+    Serial.println(estimulo_ultrassom);
+    Serial.println("la:");
+    Serial.println(estimulo_luz_alta);
+    Serial.println("lb:");
+    Serial.println(estimulo_luz_baixa);
+    Serial.println("---------------");
+    Serial.println(sensor);*/
   }
   return false;
 }
@@ -135,6 +144,39 @@ int ver_sensores() {
   }
   else if(distancia >=15)
 	return 3;
+}
+
+int mov_esquerda() {
+//Funcao para o robo girar cerca de 90 graus a esquerda
+  servo_left_front(75);
+  servo_right_back(75);
+  delay (750);
+  return 0;
+}
+
+int mov_direita() {
+//Funcao para o robo girar cerca de 90 graus a direita
+//Grosseiramente controlada com um timer, manda girar as rodas em sentido contrario e espera 750 milis
+  servo_left_back(75);
+  servo_right_front(75);
+  delay (750);
+  return 0;
+}
+
+
+int mov_avanca(){
+  //Funcao para o robo avancar "uma casa"
+  servo_left_front(75);
+  servo_right_front(75);
+  delay (750);
+  return 0;
+}
+
+int mov_retorna(){
+  servo_left_back (75);
+  servo_right_back (75);
+  delay (750);
+  return 0;
 }
 
 void moverse(int visao){
