@@ -46,7 +46,7 @@ int sensoriamento(int opcao){
   distancia = ultrasound_sensor();
   maximo = distancia;
   if(distancia > dmin) {
-    dir1 = 1;
+  dir1 = 1;
   }
 
   // olhar a esquerda
@@ -98,9 +98,12 @@ int sensoriamento(int opcao){
 int retorna (){
   int dir;
   dir = pop();
+  do {
   mover_reverso (dir);
-  if (dir/2 == 0)
-    return 0;
+  dir = pop ();
+  }
+  while (dir%2 == 0);
+  return 0;
 }
 
 
@@ -116,7 +119,7 @@ int mover (int dir){
     mov_esquerda();
     break;
   case 5:
-  case 7:
+  case 6:
     mov_direita();
   case 0:
     break;
@@ -136,7 +139,7 @@ int mover_reverso (int dir) {
     mov_direita();
     break;
   case 5:
-  case 7:
+  case 6:
     mov_esquerda();
   }
   mov_retorna();
@@ -191,7 +194,7 @@ int mov_avanca(){
   //Funcao para o robo avancar "uma casa"
   servo_left_back(75);
   servo_right_back(75);
-  delay (1250);
+  delay (2200);
   servo_left_stop();
   servo_right_stop();
   delay (200);
@@ -200,9 +203,9 @@ int mov_avanca(){
 }
 
 int mov_retorna(){
-  servo_left_back(75);
-  servo_right_back(75);
-  delay(1250);
+  servo_left_front(75);
+  servo_right_front(75);
+  delay(2200);
   servo_left_stop ();
   servo_right_stop();
   delay(200);
